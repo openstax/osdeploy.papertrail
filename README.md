@@ -11,7 +11,7 @@ Ansible > 2, Ubuntu
 Role Variables
 --------------
 
-`papertrail_url` -- should be vaulted -- and `papertrail_watch_files`. See example.
+`papertrail_url` -- should be vaulted -- and `papertrail_watch_files`. `rsyslog_hostname` as well.  See example.
 
 Dependencies
 ------------
@@ -24,8 +24,9 @@ Example Playbook
 ```
     - hosts: servers
       roles:
-        - role: openstax.papertrail
-          papertrail_url: "logs-something.a-papertrail-instance.com:12345"
+        - role:             openstax.papertrail
+          rsyslog_hostname: "{{ hostvars[inventory_hostname] }}"
+          papertrail_url:   "logs-something.a-papertrail-instance.com:12345"
           papertrail_watch_files:
             - path: "/var/www/application-name/log/production.log"
               unique_name: "application-name-rails-log"
