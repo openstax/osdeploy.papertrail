@@ -24,7 +24,7 @@ Example Playbook
 ```
     - hosts: servers
       roles:
-        - role:             openstax.papertrail
+        - role:             osdeploy.papertrail
           rsyslog_hostname: "{{ hostvars[inventory_hostname] }}"
           papertrail_url:   "logs-something.a-papertrail-instance.com:12345"
           papertrail_watch_files:
