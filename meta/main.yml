@@ -219,7 +219,8 @@ galaxy_info:
     # alphanumeric characters. Maximum 20 tags per role.
 
 dependencies:
-  - role: osdeploy.rsyslog
+  - src: osdeploy.rsyslog
+    version: 0.1.0
     rsyslog_hostname: rsyslog_hostname
   # List your role dependencies here, one per line.
   # Be sure to remove the '[]' above if you add dependencies
