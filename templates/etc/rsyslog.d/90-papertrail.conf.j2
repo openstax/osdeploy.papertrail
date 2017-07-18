@@ -1,0 +1,42 @@
+# Setup for encrypted transmission to papertrail
+
+$DefaultNetstreamDriverCAFile /etc/papertrail-bundle.pem # trust these CAs
+$ActionSendStreamDriver gtls # use gtls netstream driver
+$ActionSendStreamDriverMode 1 # require TLS
+$ActionSendStreamDriverAuthMode x509/name # authenticate by hostname
+$ActionSendStreamDriverPermittedPeer *.papertrailapp.com
+
+# Make sure we don't drop messages if the TCP connection drops
+
+$ActionResumeInterval 10
+$ActionQueueSize 100000
+$ActionQueueDiscardMark 97500
+$ActionQueueHighWaterMark 80000
+$ActionQueueType LinkedList
+$ActionQueueFileName papertrailqueue
+$ActionQueueCheckpointInterval 100
+$ActionQueueMaxDiskSpace 500m
+$ActionResumeRetryCount -1
+$ActionQueueSaveOnShutdown on
+$ActionQueueTimeoutEnqueue 10
+$ActionQueueDiscardSeverity 0
+
+# Send local files
+
+$ModLoad imfile
+
+{% for watch_file in papertrail_watch_files
+   if 'skip' not in watch_file or watch_file.skip == 'False' %}
+$RuleSet papertrail  # use a non-default ruleset (keeps logs out of /var/log/)
+$InputFileName {{ watch_file.path }}
+$InputFileTag {{ watch_file.unique_name }}:
+$InputFileStateFile papertrail-{{ watch_file.unique_name }}
+$InputFilePersistStateInterval 100 # update state file every 100 lines
+$InputRunFileMonitor
+{% endfor %}
+
+$RuleSet RSYSLOG_DefaultRuleset
+
+# Ship it
+
+*.*          @@{{ papertrail_url }}

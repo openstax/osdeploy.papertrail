@@ -1,0 +1,6 @@
+---
+papertrail_url: ""
+papertrail_watch_files: []
+  # - path: ""
+  #   unique_name: ""
+  #   watch: True # optional

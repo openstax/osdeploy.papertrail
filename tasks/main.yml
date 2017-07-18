@@ -1,0 +1,29 @@
+---
+- name: install dependencies for papertrail
+  apt:
+    pkg:    "{{ item }}"
+    state:  installed
+    state:  latest
+    update_cache: yes
+  with_items:
+    - libssl-dev
+    - rsyslog-gnutls
+  when: ansible_distribution == 'Ubuntu'
+
+- name: store papertrail root certificates
+  get_url:
+    url:      https://papertrailapp.com/tools/papertrail-bundle.pem
+    dest:     /etc/papertrail-bundle.pem
+    checksum: md5:ba3b40a34ec33ac0869fa5b17a0c80fc
+    owner:    root
+    group:    root
+    mode:     0644
+
+- name: add papertrail config to rsyslog
+  template:
+    src:    etc/rsyslog.d/90-papertrail.conf.j2
+    dest:   /etc/rsyslog.d/90-papertrail.conf
+    owner:  root
+    group:  root
+    mode:   0644
+  notify: restart rsyslog
