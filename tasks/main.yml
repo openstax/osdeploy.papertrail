@@ -9,6 +9,9 @@
     - libssl-dev
     - rsyslog-gnutls
   when: ansible_distribution == 'Ubuntu'
+  tags:
+    - papertrail
+    - papertrail-install
 
 - name: store papertrail root certificates
   get_url:
@@ -18,6 +21,9 @@
     owner:    root
     group:    root
     mode:     0644
+  tags:
+    - papertrail
+    - papertrail-conf
 
 - name: add papertrail config to rsyslog
   template:
@@ -27,3 +33,6 @@
     group:  root
     mode:   0644
   notify: restart rsyslog
+  tags:
+    - papertrail
+    - papertrail-conf
