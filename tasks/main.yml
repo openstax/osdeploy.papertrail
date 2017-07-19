@@ -1,5 +1,6 @@
 ---
 - name: install dependencies for papertrail
+  become: yes
   apt:
     pkg:    "{{ item }}"
     state:  installed
@@ -14,6 +15,7 @@
     - papertrail-install
 
 - name: store papertrail root certificates
+  become: yes
   get_url:
     url:      https://papertrailapp.com/tools/papertrail-bundle.pem
     dest:     /etc/papertrail-bundle.pem
@@ -26,6 +28,7 @@
     - papertrail-conf
 
 - name: add papertrail config to rsyslog
+  become: yes
   template:
     src:    etc/rsyslog.d/90-papertrail.conf.j2
     dest:   /etc/rsyslog.d/90-papertrail.conf
